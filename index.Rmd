@@ -1,0 +1,17 @@
+---
+title: "p8105_hw6"
+output:
+  html_document: 
+    toc: true
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```  
+
+
+This is the homework 6 answer from Jian Zou and .  
+In this page, we will briefly introduce how we create a flexdashboard and a shiny-enabled dashboard.  
+The dataset used is **NYC Restaurant Inspection Results** which can be obtained at [NYC Public data](https://dev.socrata.com/foundry/data.cityofnewyork.us/9w7m-hzhe).
+
