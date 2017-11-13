@@ -13,5 +13,57 @@ knitr::opts_chunk$set(echo = TRUE)
 
 This is the homework 6 answer from Jian Zou and .  
 In this page, we will briefly introduce how we create a flexdashboard and a shiny-enabled dashboard.  
-The dataset used is **NYC Restaurant Inspection Results** which can be obtained at [NYC Public data](https://dev.socrata.com/foundry/data.cityofnewyork.us/9w7m-hzhe).
+The dataset used is **Instacart** which can be obtained at [The Instacart Online Grocery Shopping Dataset 2017](https://www.instacart.com/datasets/grocery-shopping-2017).
 
+
+### Import the data
+```{r}
+library(tidyverse)
+library(janitor)
+library(stringr)
+library(forcats)
+library(viridis)
+library(plotly)
+
+instacart = read_csv("../data/instacart_train_data.csv.zip")
+```  
+
+
+### Items ordered  
+```{r}
+instacart %>%
+  group_by(department) %>%
+  summarize(items_ordered = n()) %>%
+  mutate(depart_rank = min_rank(desc(items_ordered))) %>%
+  filter(depart_rank <= 7) %>%
+  arrange(depart_rank) %>%
+  mutate(department = fct_reorder(department, items_ordered)) %>%
+  plot_ly(y = ~items_ordered, x = ~department, type = "bar")
+```
+
+
+### Popular items
+```{r}
+popular_items =
+  instacart %>% 
+  group_by(department, product_name) %>%
+  summarize(items_ordered = n()) %>%
+  mutate(item_rank = min_rank(desc(items_ordered))) %>%
+  filter(item_rank < 2)
+
+popular_items %>%
+  ungroup() %>%
+  mutate(product_name = fct_reorder(product_name, items_ordered)) %>%
+  plot_ly(y = ~items_ordered, x = ~product_name, type = "bar") 
+#you can make the shiny to present popular items in each department.
+```
+
+
+### Mean hour of the day items are ordered
+```{r}
+instacart %>%
+  group_by(product_name, order_dow) %>%
+  summarize(mean_hour = mean(order_hour_of_day)) %>%
+  spread(key = order_dow, value = mean_hour) 
+
+```

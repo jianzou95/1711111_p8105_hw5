@@ -1,0 +1,68 @@
+---
+title: "flexdashboard"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+```  
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### items ordered in each department
+
+```{r}
+library(tidyverse)
+library(janitor)
+library(stringr)
+library(forcats)
+library(viridis)
+library(ggridges)
+library(plotly)
+
+instacart = read_csv("../data/instacart_train_data.csv.zip")
+
+instacart %>%
+  group_by(department) %>%
+  summarize(items_ordered = n()) %>%
+  mutate(depart_rank = min_rank(desc(items_ordered))) %>%
+  filter(depart_rank <= 7) %>%
+  arrange(depart_rank) %>%
+  mutate(department = fct_reorder(department, items_ordered)) %>%
+  plot_ly(y = ~items_ordered, x = ~department, type = "bar")
+```
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Order hours for items from each department
+
+```{r}
+order_hour = 
+  instacart %>%
+  mutate(department = fct_reorder(department, order_hour_of_day, IQR)) %>%
+  ggplot(aes(x = department, y = order_hour_of_day, fill = department)) + 
+  geom_violin(bw = .6) +
+  theme(axis.text.x = element_text(angle = 90))
+
+ggplotly(order_hour)
+```
+
+### mean order hour for each day
+
+```{r}
+mean_hour =
+  instacart %>%
+  group_by(product_name, order_dow) %>%
+  summarize(mean_hour = mean(order_hour_of_day)) %>%
+  spread(key = order_dow, value = mean_hour) %>%
+  gather(key = day, value = mean_hour, "0":"6") %>%
+  ggplot(aes(x = day, y = mean_hour, color = day)) +
+  geom_boxplot()
+
+ggplotly(mean_hour)
+```

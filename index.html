@@ -305,7 +305,65 @@ div.tocify {
 
 <p>This is the homework 6 answer from Jian Zou and .<br />
 In this page, we will briefly introduce how we create a flexdashboard and a shiny-enabled dashboard.<br />
-The dataset used is <strong>NYC Restaurant Inspection Results</strong> which can be obtained at <a href="https://dev.socrata.com/foundry/data.cityofnewyork.us/9w7m-hzhe">NYC Public data</a></p>
+The dataset used is <strong>Instacart</strong> which can be obtained at <a href="https://www.instacart.com/datasets/grocery-shopping-2017">The Instacart Online Grocery Shopping Dataset 2017</a>.</p>
+<div id="import-the-data" class="section level3">
+<h3>Import the data</h3>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## Loading tidyverse: ggplot2
+## Loading tidyverse: tibble
+## Loading tidyverse: tidyr
+## Loading tidyverse: readr
+## Loading tidyverse: purrr
+## Loading tidyverse: dplyr</code></pre>
+<pre><code>## Warning: package &#39;ggplot2&#39; was built under R version 3.4.2</code></pre>
+<pre><code>## Warning: package &#39;tidyr&#39; was built under R version 3.4.2</code></pre>
+<pre><code>## Warning: package &#39;dplyr&#39; was built under R version 3.4.2</code></pre>
+<pre><code>## Conflicts with tidy packages ----------------------------------------------</code></pre>
+<pre><code>## filter(): dplyr, stats
+## lag():    dplyr, stats</code></pre>
+<pre class="r"><code>library(janitor)</code></pre>
+<pre><code>## Warning: package &#39;janitor&#39; was built under R version 3.4.2</code></pre>
+<pre class="r"><code>library(stringr)
+library(forcats)
+library(viridis)</code></pre>
+<pre><code>## Warning: package &#39;viridis&#39; was built under R version 3.4.2</code></pre>
+<pre><code>## Loading required package: viridisLite</code></pre>
+<pre class="r"><code>library(plotly)</code></pre>
+<pre><code>## Warning: package &#39;plotly&#39; was built under R version 3.4.2</code></pre>
+<pre><code>## 
+## Attaching package: &#39;plotly&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:ggplot2&#39;:
+## 
+##     last_plot</code></pre>
+<pre><code>## The following object is masked from &#39;package:stats&#39;:
+## 
+##     filter</code></pre>
+<pre><code>## The following object is masked from &#39;package:graphics&#39;:
+## 
+##     layout</code></pre>
+<pre class="r"><code>instacart = read_csv(&quot;../data/instacart_train_data.csv.zip&quot;)</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   order_id = col_integer(),
+##   product_id = col_integer(),
+##   add_to_cart_order = col_integer(),
+##   reordered = col_integer(),
+##   user_id = col_integer(),
+##   eval_set = col_character(),
+##   order_number = col_integer(),
+##   order_dow = col_integer(),
+##   order_hour_of_day = col_integer(),
+##   days_since_prior_order = col_integer(),
+##   product_name = col_character(),
+##   aisle_id = col_integer(),
+##   department_id = col_integer(),
+##   aisle = col_character(),
+##   department = col_character()
+## )</code></pre>
+</div>
+<div id="section" class="section level3">
+<h3></h3>
+</div>
 
 
 
