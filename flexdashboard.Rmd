@@ -23,6 +23,7 @@ library(forcats)
 library(viridis)
 library(ggridges)
 library(plotly)
+library(shiny)
 
 instacart = read_csv("../data/instacart_train_data.csv.zip")
 
