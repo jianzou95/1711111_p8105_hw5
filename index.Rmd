@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```  
 
 
-This is the homework 6 answer from Jian Zou and .  
+This is the homework 6 answer from Jian Zou and Hsiang Lun Kao.  
 In this page, we will briefly introduce how we create a flexdashboard and a shiny-enabled dashboard.  
 The dataset used is **NYC Restaurant Inspection Results** which can be obtained at [NYC Public data](https://dev.socrata.com/foundry/data.cityofnewyork.us/9w7m-hzhe).
 
