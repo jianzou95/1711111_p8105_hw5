@@ -39,8 +39,8 @@ checkboxGroupInput(inputId = "obs",
 
 ```{r}
 
-sliderInput("mean_hour_range", label = h3("Choose hour range"), min = 0, 
-        max = 23, value = c(5, 15))
+sliderInput("rank", label = h3("Choose rank range"), min = 1, 
+        max = 21, value = c(1, 7))
 ```
 -----------------------------------------------------------------------
 
@@ -49,12 +49,11 @@ sliderInput("mean_hour_range", label = h3("Choose hour range"), min = 0,
 ```{r}
 renderPlotly({ 
   instacart %>%
-  filter(department==input$obs) %>%
   group_by(department) %>%
   summarize(items_ordered = n()) %>%
   mutate(depart_rank = min_rank(desc(items_ordered))) %>%
-  filter(depart_rank <= 7) %>%
   arrange(depart_rank) %>%
+  filter(depart_rank == input$rank) %>%
   mutate(department = fct_reorder(department, items_ordered)) %>%
   plot_ly(y = ~items_ordered, x = ~department, type = "bar")
 })
@@ -81,17 +80,16 @@ renderPlotly({
 ### Chart C
 
 ```{r}
-renderPlotly({
 mean_hour =
   instacart %>%
   group_by(product_name, order_dow) %>%
   summarize(mean_hour = mean(order_hour_of_day)) %>%
   spread(key = order_dow, value = mean_hour) %>%
   gather(key = day, value = mean_hour, "0":"6") %>%
-  filter(mean_hour==input$mean_hour_range) %>%
   ggplot(aes(x = day, y = mean_hour, color = day)) +
   geom_boxplot()
-})
+
+ggplotly(mean_hour)
 
 ```
 
