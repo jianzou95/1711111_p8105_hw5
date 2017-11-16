@@ -1,0 +1,97 @@
+---
+title: "Shiny"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: row
+  runtime: shiny
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+```
+
+```{r}
+library(tidyverse)
+library(janitor)
+library(stringr)
+library(forcats)
+library(viridis)
+library(ggridges)
+library(plotly)
+library(shiny)
+```
+
+```{r}
+instacart = read_csv("../data/instacart_train_data.csv.zip")
+
+```
+
+Column {.sidebar}
+-----------------------------------------------------------------------
+
+```{r}
+departments = instacart %>% distinct(department) %>% pull()
+checkboxGroupInput(inputId = "obs",
+                   label = h3("Observations to view:"), choices = departments,
+                   selected = "beverages")
+```
+
+
+```{r}
+
+sliderInput("mean_hour_range", label = h3("Choose hour range"), min = 0, 
+        max = 23, value = c(5, 15))
+```
+-----------------------------------------------------------------------
+
+### Items ordered in each department
+
+```{r}
+renderPlotly({ 
+  instacart %>%
+  filter(department==input$obs) %>%
+  group_by(department) %>%
+  summarize(items_ordered = n()) %>%
+  mutate(depart_rank = min_rank(desc(items_ordered))) %>%
+  filter(depart_rank <= 7) %>%
+  arrange(depart_rank) %>%
+  mutate(department = fct_reorder(department, items_ordered)) %>%
+  plot_ly(y = ~items_ordered, x = ~department, type = "bar")
+})
+```
+
+Row {.tabset .tabset-fade}
+-----------------------------------------------------------------------
+
+### Order hours for items from each department
+
+```{r}
+renderPlotly({
+  instacart %>%
+  filter(department==input$obs) %>%
+  mutate(department = fct_reorder(department, order_hour_of_day, IQR)) %>%
+  ggplot(aes(x = department, y = order_hour_of_day, fill = department)) + 
+  geom_violin(bw = .6) +
+  theme(axis.text.x = element_text(angle = 90))
+  })
+
+
+```
+
+### Chart C
+
+```{r}
+renderPlotly({
+mean_hour =
+  instacart %>%
+  group_by(product_name, order_dow) %>%
+  summarize(mean_hour = mean(order_hour_of_day)) %>%
+  spread(key = order_dow, value = mean_hour) %>%
+  gather(key = day, value = mean_hour, "0":"6") %>%
+  filter(mean_hour==input$mean_hour_range) %>%
+  ggplot(aes(x = day, y = mean_hour, color = day)) +
+  geom_boxplot()
+})
+
+```
+
