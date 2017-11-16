@@ -1,0 +1,10 @@
+name: addition
+title:
+username:
+account: jianzou
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 236080
+bundleId: 1078299
+url: https://jianzou.shinyapps.io/addition/
+when: 1510813088.42319

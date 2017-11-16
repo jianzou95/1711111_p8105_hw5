@@ -79,3 +79,4 @@ ggplotly(mean_hour)
 
 ## Related link
 * [Flexdashboard](flexdashboard.html).
+* [Shiny](https://jianzou.shinyapps.io/shiny/)

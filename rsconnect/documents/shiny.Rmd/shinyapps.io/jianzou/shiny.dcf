@@ -1,0 +1,10 @@
+name: shiny
+title:
+username:
+account: jianzou
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 236081
+bundleId: 1078300
+url: https://jianzou.shinyapps.io/shiny/
+when: 1510813259.67976
