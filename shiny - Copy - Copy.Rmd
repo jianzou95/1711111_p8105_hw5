@@ -55,8 +55,12 @@ renderPlotly({
   summarize(items_ordered = n()) %>%
   mutate(depart_rank = min_rank(desc(items_ordered))) %>%
   arrange(depart_rank) %>%
+<<<<<<< HEAD
   filter(depart_rank %in% input$rank[1]:input$rank[2]) %>%
+=======
+>>>>>>> d4e5e1e92d989024529912586c9e18168fd474a9
   mutate(department = fct_reorder(department, items_ordered)) %>%
+  filter(depart_rank %in% input$rank[1]:input$rank[2]) %>%
   plot_ly(y = ~items_ordered, x = ~department, type = "bar")
 })
 ```
