@@ -30,18 +30,17 @@ Column {.sidebar}
 -----------------------------------------------------------------------
 
 ```{r}
+sliderInput("rank", label = h3("Choose rank range"), min = 1, 
+        max = 21, value = c(5, 10))
+```
+
+
+```{r}
 departments = instacart %>% distinct(department) %>% pull()
 checkboxGroupInput(inputId = "obs",
                    label = h3("Observations to view:"), choices = departments,
                    selected = c("beverages","dairy eggs", "produce", "deli", "snacks"))
 ```
-
-
-```{r}
-sliderInput("rank", label = h3("Choose rank range"), min = 1, 
-        max = 21, value = c(5, 10))
-```
-
 
 Row 
 -----------------------------------------------------------------------
@@ -55,10 +54,7 @@ renderPlotly({
   summarize(items_ordered = n()) %>%
   mutate(depart_rank = min_rank(desc(items_ordered))) %>%
   arrange(depart_rank) %>%
-<<<<<<< HEAD
   filter(depart_rank %in% input$rank[1]:input$rank[2]) %>%
-=======
->>>>>>> d4e5e1e92d989024529912586c9e18168fd474a9
   mutate(department = fct_reorder(department, items_ordered)) %>%
   filter(depart_rank %in% input$rank[1]:input$rank[2]) %>%
   plot_ly(y = ~items_ordered, x = ~department, type = "bar")
@@ -86,7 +82,7 @@ renderPlotly({
 
 ------------------------------------------
 
-### Chart C
+### Mean order hour in a week
 
 ```{r}
 mean_hour =
@@ -99,6 +95,5 @@ mean_hour =
   geom_boxplot()
 
 ggplotly(mean_hour)
-
 ```
 

@@ -278,13 +278,7 @@ div.tocify {
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="mailto:&lt;you@youremail.com&gt;">
-    <span class="fa fa-envelope fa-lg"></span>
-     
-  </a>
-</li>
-<li>
-  <a href="http://github.com/&lt;YOUR_GH_NAME&gt;/">
+  <a href="https://github.com/jianzou95/1711111_p8105_hw6">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -303,66 +297,71 @@ div.tocify {
 </div>
 
 
-<p>This is the homework 6 answer from Jian Zou and .<br />
-In this page, we will briefly introduce how we create a flexdashboard and a shiny-enabled dashboard.<br />
+<p>This is the homework 6 answer from Jian Zou and Hsiang Lun Kao.</p>
+<div id="describes-the-data-used" class="section level2">
+<h2>Describes the data used</h2>
+<p>In this page, we will briefly introduce how we create a flexdashboard and a shiny-enabled dashboard.<br />
 The dataset used is <strong>Instacart</strong> which can be obtained at <a href="https://www.instacart.com/datasets/grocery-shopping-2017">The Instacart Online Grocery Shopping Dataset 2017</a>.</p>
+</div>
+<div id="relevant-processing-steps" class="section level2">
+<h2>Relevant processing steps</h2>
 <div id="import-the-data" class="section level3">
 <h3>Import the data</h3>
-<pre class="r"><code>library(tidyverse)</code></pre>
-<pre><code>## Loading tidyverse: ggplot2
-## Loading tidyverse: tibble
-## Loading tidyverse: tidyr
-## Loading tidyverse: readr
-## Loading tidyverse: purrr
-## Loading tidyverse: dplyr</code></pre>
-<pre><code>## Warning: package &#39;ggplot2&#39; was built under R version 3.4.2</code></pre>
-<pre><code>## Warning: package &#39;tidyr&#39; was built under R version 3.4.2</code></pre>
-<pre><code>## Warning: package &#39;dplyr&#39; was built under R version 3.4.2</code></pre>
-<pre><code>## Conflicts with tidy packages ----------------------------------------------</code></pre>
-<pre><code>## filter(): dplyr, stats
-## lag():    dplyr, stats</code></pre>
-<pre class="r"><code>library(janitor)</code></pre>
-<pre><code>## Warning: package &#39;janitor&#39; was built under R version 3.4.2</code></pre>
-<pre class="r"><code>library(stringr)
+<pre class="r"><code>library(tidyverse)
+library(janitor)
+library(stringr)
 library(forcats)
-library(viridis)</code></pre>
-<pre><code>## Warning: package &#39;viridis&#39; was built under R version 3.4.2</code></pre>
-<pre><code>## Loading required package: viridisLite</code></pre>
-<pre class="r"><code>library(plotly)</code></pre>
-<pre><code>## Warning: package &#39;plotly&#39; was built under R version 3.4.2</code></pre>
-<pre><code>## 
-## Attaching package: &#39;plotly&#39;</code></pre>
-<pre><code>## The following object is masked from &#39;package:ggplot2&#39;:
-## 
-##     last_plot</code></pre>
-<pre><code>## The following object is masked from &#39;package:stats&#39;:
-## 
-##     filter</code></pre>
-<pre><code>## The following object is masked from &#39;package:graphics&#39;:
-## 
-##     layout</code></pre>
-<pre class="r"><code>instacart = read_csv(&quot;../data/instacart_train_data.csv.zip&quot;)</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   order_id = col_integer(),
-##   product_id = col_integer(),
-##   add_to_cart_order = col_integer(),
-##   reordered = col_integer(),
-##   user_id = col_integer(),
-##   eval_set = col_character(),
-##   order_number = col_integer(),
-##   order_dow = col_integer(),
-##   order_hour_of_day = col_integer(),
-##   days_since_prior_order = col_integer(),
-##   product_name = col_character(),
-##   aisle_id = col_integer(),
-##   department_id = col_integer(),
-##   aisle = col_character(),
-##   department = col_character()
-## )</code></pre>
+library(viridis)
+library(plotly)
+
+instacart = read_csv(&quot;../data/instacart_train_data.csv.zip&quot;)</code></pre>
 </div>
-<div id="section" class="section level3">
-<h3></h3>
+<div id="number-of-items" class="section level3">
+<h3>Number of items</h3>
+<p>In this part, we rank the department according to number of items ordered. Users can choose the rank (e.g. top 10 departments).</p>
+<pre class="r"><code>renderPlotly({ 
+  instacart %&gt;%
+  group_by(department) %&gt;%
+  summarize(items_ordered = n()) %&gt;%
+  mutate(depart_rank = min_rank(desc(items_ordered))) %&gt;%
+  arrange(depart_rank) %&gt;%
+  mutate(department = fct_reorder(department, items_ordered)) %&gt;%
+  filter(depart_rank %in% input$rank[1]:input$rank[2]) %&gt;%
+  plot_ly(y = ~items_ordered, x = ~department, type = &quot;bar&quot;)
+})</code></pre>
+</div>
+<div id="order-hours-for-items" class="section level3">
+<h3>Order hours for items</h3>
+<p>In this part, we use the “violin plot” to show the distribution of order hour in a day for each department.</p>
+<pre class="r"><code>renderPlotly({
+  instacart %&gt;%
+  filter(department==input$obs) %&gt;%
+  mutate(department = fct_reorder(department, order_hour_of_day, IQR)) %&gt;%
+  ggplot(aes(x = department, y = order_hour_of_day, fill = department)) + 
+  geom_violin(bw = .6) +
+  theme(axis.text.x = element_text(angle = 90))
+  })</code></pre>
+</div>
+<div id="mean-order-hour-in-a-week" class="section level3">
+<h3>Mean order hour in a week</h3>
+<p>In this part, boxplot is adopted to show the distribution of mean order in a week.</p>
+<pre class="r"><code>mean_hour =
+  instacart %&gt;%
+  group_by(product_name, order_dow) %&gt;%
+  summarize(mean_hour = mean(order_hour_of_day)) %&gt;%
+  spread(key = order_dow, value = mean_hour) %&gt;%
+  gather(key = day, value = mean_hour, &quot;0&quot;:&quot;6&quot;) %&gt;%
+  ggplot(aes(x = day, y = mean_hour, color = day)) +
+  geom_boxplot()
+
+ggplotly(mean_hour)</code></pre>
+</div>
+</div>
+<div id="related-link" class="section level2">
+<h2>Related link</h2>
+<ul>
+<li><a href="flexdashboard.html">Flexdashboard</a>.</li>
+</ul>
 </div>
 
 
