@@ -33,15 +33,17 @@ Column {.sidebar}
 departments = instacart %>% distinct(department) %>% pull()
 checkboxGroupInput(inputId = "obs",
                    label = h3("Observations to view:"), choices = departments,
-                   selected = "beverages")
+                   selected = c("beverages","dairy eggs", "produce", "deli", "snacks"))
 ```
 
 
 ```{r}
-
 sliderInput("rank", label = h3("Choose rank range"), min = 1, 
-        max = 21, value = c(1, 7))
+        max = 21, value = c(5, 10))
 ```
+
+
+Row 
 -----------------------------------------------------------------------
 
 ### Items ordered in each department
@@ -53,7 +55,7 @@ renderPlotly({
   summarize(items_ordered = n()) %>%
   mutate(depart_rank = min_rank(desc(items_ordered))) %>%
   arrange(depart_rank) %>%
-  filter(depart_rank == input$rank) %>%
+  filter(depart_rank %in% input$rank[1]:input$rank[2]) %>%
   mutate(department = fct_reorder(department, items_ordered)) %>%
   plot_ly(y = ~items_ordered, x = ~department, type = "bar")
 })
@@ -76,6 +78,9 @@ renderPlotly({
 
 
 ```
+
+
+------------------------------------------
 
 ### Chart C
 
