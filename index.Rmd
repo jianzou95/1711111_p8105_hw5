@@ -83,4 +83,5 @@ ggplotly(mean_hour)
 * [Rmd for the flexdashboard](https://github.com/jianzou95/1711111_p8105_hw6/blob/master/flexdashboard.Rmd)
 * [Shiny](https://jianzou.shinyapps.io/shiny/)
 * [Rmd for the shiny](https://github.com/jianzou95/1711111_p8105_hw6/blob/master/shiny.Rmd)
-* [Github respository used to summarize this homework](https://github.com/jianzou95/1711111_p8105_hw6)
+* [Github respository used to summarize this homework](https://github.com/jianzou95/1711111_p8105_hw6)  
+Unfortunately, the shiny does not work all the time.
